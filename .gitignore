@@ -1,0 +1,9 @@
+./target
+./it-dating
+./dependency-reduced-pom.xml
+./derby.log
+./hs_err*.log
+./.metadat
+./.project
+./.settings
+./.attach_pid*
