@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class FilterFunction implements Function<SearchResultItem, FilterResult> {
 
-    static final Locale RUSSIAN_LOCALE = new Locale("ru", "RU");
+    static final Locale RUSSIAN_LOCALE = Locale.of("ru", "RU");
 
     private static final long WAIT_BEFORE_RETRY_MILLIS = 60_000L;
     

@@ -61,11 +61,14 @@ public class CheckBlogFunction
     }
     
     private boolean isBlogNormal(String blog) {
-        return blog != null && !blog.isBlank() && !blog.contains("linkedin")
-                && !blog.contains("vk") && !blog.contains("facebook")
-                && !blog.contains("twitter") && !blog.contains("t.me")
-                && !blog.contains("instagram.com")
-                && !blog.contains("plus.google.com");
+        return blog != null && !blog.isBlank()
+                // We can validate even harder:
+                //&& !blog.contains("linkedin")
+                //&& !blog.contains("vk") && !blog.contains("facebook")
+                //&& !blog.contains("twitter") && !blog.contains("t.me")
+                //&& !blog.contains("instagram.com")
+                //&& !blog.contains("plus.google.com")
+                ;
     }
 
 }
