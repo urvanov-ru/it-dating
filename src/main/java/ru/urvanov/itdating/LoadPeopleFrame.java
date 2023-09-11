@@ -1,5 +1,7 @@
 package ru.urvanov.itdating;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -8,9 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
@@ -23,6 +27,10 @@ public class LoadPeopleFrame extends JFrame {
     private Settings settings;
     
     private JProgressBar countProgressBar;
+    
+    private JLabel warningLabel;
+    
+    private JPanel progressPanel;
     
     private JLabel countLabel;
     
@@ -59,23 +67,49 @@ public class LoadPeopleFrame extends JFrame {
         this.settings = settings;
         setTitle("Loading");
         setLocationByPlatform(true);
-        setLayout(new GridLayout(14, 1));
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        setLayout(gridBagLayout);
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        add(countLabel = new JLabel("Counting..."));
-        add(countProgressBar = new JProgressBar());
-        add(prepareLabel = new JLabel("Please, wait..."));
-        add(prepareProgressBar = new JProgressBar());
-        add(searchLabel = new JLabel("Searching girls in GitHub..."));
-        add(searchProgressBar = new JProgressBar());
-        add(filterLabel = new JLabel("Filtering search results..."));
-        add(filterProgressBar = new JProgressBar());
-        add(checkBlogLabel = new JLabel("Checking blog..."));
-        add(checkBlogProgressBar = new JProgressBar());
-        add(downloadAvatarLabel = new JLabel("Downloading avatars..."));
-        add(downloadAvatarProgressBar = new JProgressBar());
-        add(saveLabel = new JLabel("Saving..."));
-        add(saveProgressBar = new JProgressBar());
+        add(warningLabel = new JLabel("""
+                        <html>
+                        <b>Warning!</b> The process can be <i>very long</i>. Just wait... 
+                        The progress bars below show individual progress of 
+                        separated tasks. Every task except <b>'Saving'</b> 
+                        produces input for next tasks, so their progress can
+                         go back when they receive it.
+                         </html>"""));
+        add(progressPanel = new JPanel());
+        GridBagConstraints warningLabelConstraints = new GridBagConstraints();
+        warningLabelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        warningLabelConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        warningLabelConstraints.fill = GridBagConstraints.BOTH;
+        warningLabelConstraints.weightx = 1.0;
+        gridBagLayout.setConstraints(warningLabel, warningLabelConstraints);
+        GridBagConstraints progressPanelConstraints = new GridBagConstraints();
+        progressPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
+        progressPanelConstraints.fill = GridBagConstraints.BOTH;
+        progressPanelConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        progressPanelConstraints.gridheight = GridBagConstraints.REMAINDER;
+        progressPanelConstraints.weightx = 1.0;
+        progressPanelConstraints.weighty = 1.0;
+        gridBagLayout.setConstraints(progressPanel, progressPanelConstraints);
+        progressPanel.setLayout(new GridLayout(0, 1));
+        progressPanel.add(countLabel = new JLabel("Counting..."));
+        progressPanel.add(countProgressBar = new JProgressBar());
+        progressPanel.add(prepareLabel = new JLabel("Please, wait..."));
+        progressPanel.add(prepareProgressBar = new JProgressBar());
+        progressPanel.add(searchLabel = new JLabel("Searching girls in GitHub..."));
+        progressPanel.add(searchProgressBar = new JProgressBar());
+        progressPanel.add(filterLabel = new JLabel("Filtering search results..."));
+        progressPanel.add(filterProgressBar = new JProgressBar());
+        progressPanel.add(checkBlogLabel = new JLabel("Checking blog..."));
+        progressPanel.add(checkBlogProgressBar = new JProgressBar());
+        progressPanel.add(downloadAvatarLabel = new JLabel("Downloading avatars..."));
+        progressPanel.add(downloadAvatarProgressBar = new JProgressBar());
+        progressPanel.add(saveLabel = new JLabel("Saving..."));
+        progressPanel.add(saveProgressBar = new JProgressBar());
+        
         
         checkBlogLabel.setText("Checking blog url...");
         downloadAvatarLabel.setText("Downloading avatar...");
@@ -204,7 +238,8 @@ public class LoadPeopleFrame extends JFrame {
             @Override
             protected void done() {
                 System.out.println("People load completed.");
-                //setVisible(false);
+                JOptionPane.showMessageDialog(LoadPeopleFrame.this, "Loading has been completed.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                LoadPeopleFrame.this.setVisible(false);
                 try {
                     this.get();
                 } catch (InterruptedException e) {
